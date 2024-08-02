@@ -1713,3 +1713,11 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 5; 
     callback = bindableFunction;
 })
+wait(1)
+game.StarterGui:SetCore("SendNotification", {
+    Title = "Guess whos back yeeee";
+    Text = "Welcome back !";
+    Icon = "http://www.roblox.com/asset/?id=5585095509"; 
+    Duration = 2; 
+    callback = bindableFunction;
+})

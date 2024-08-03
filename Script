@@ -315,7 +315,6 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 4;
     callback = bindableFunction;
 })
-
 local plr = game.Players.LocalPlayer
 local rs = game:GetService("RunService")
 local mouse = plr:GetMouse()
@@ -324,37 +323,44 @@ local mouse = plr:GetMouse()
 local function AddGlow(selectionBox)
     local glow = Instance.new("PointLight")
     glow.Name = "SelectionGlow"
-    glow.Color = Color3.fromRGB(70, 0, 235)
-    glow.Brightness = 6
-    glow.Range = 7
+    glow.Color = Color3.fromRGB(255, 0, 0)
+    glow.Brightness = 9
+    glow.Range = 5
     glow.Parent = selectionBox
 end
 
 -- Function to create a neon part and update its position
 local function CreateNeonPart(adornedPart, player)
+    -- Elimina cualquier "SelectedPlayerGui" existente
+    for _, v in pairs(workspace:GetDescendants()) do
+        if v.Name == "SelectedPlayerGui" and v:IsA("BillboardGui") then
+            v:Destroy()
+        end
+    end
+
     local billboardGui = Instance.new("BillboardGui")
     billboardGui.Name = "SelectedPlayerGui"
     billboardGui.AlwaysOnTop = true
-    billboardGui.Size = UDim2.new(0.5, 0, 0.5, 0)  -- Ajusta el tamaño según sea necesario
+    billboardGui.Size = UDim2.new(0.9, 0, 0.9, 0)  -- Ajusta el tamaño según sea necesario
     billboardGui.Adornee = adornedPart
     billboardGui.Parent = adornedPart
 
     local frame = Instance.new("Frame")
-    frame.BackgroundTransparency = 0.15
-    frame.Size = UDim2.new(0.5, 0, 0.5, 0)
-    frame.BackgroundColor3 = Color3.fromRGB(70, 0, 235)
+    frame.BackgroundTransparency = 0.35
+    frame.Size = UDim2.new(0.9, 0, 0.9, 0)
+    frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     frame.Parent = billboardGui
 
     local neonPart = Instance.new("Part")
     neonPart.Name = "SelectedPlayer"
     neonPart.Anchored = true
     neonPart.CanCollide = false
-    neonPart.Transparency = 0.85
-    neonPart.Size = Vector3.new(0.5, 0.5, 0.5)
+    neonPart.Transparency = 1
+    neonPart.Size = Vector3.new(0.2, 0.2, 0.2)
     neonPart.Position = adornedPart.Position
     neonPart.CFrame = adornedPart.CFrame
     neonPart.Material = Enum.Material.Neon
-    neonPart.Color = Color3.fromRGB(70, 0, 235)
+    neonPart.Color = Color3.fromRGB(255, 0, 0)
     AddGlow(neonPart)  -- Añadir brillo a la parte de neón
     neonPart.Parent = adornedPart
     
@@ -388,8 +394,11 @@ end
 
 -- Function to handle player selection
 local function SelectPlayer(player)
+    -- Avoid selecting the local player
+    if player == plr then return end
+
     for _, v in next, workspace:GetDescendants() do
-        if v.Name == "SelectedPlayer" then
+        if v.Name == "SelectedPlayer" or v.Name == "SelectedPlayerGui" then
             v:Destroy()
         end
     end
@@ -1708,16 +1717,8 @@ end)
 
 game.StarterGui:SetCore("SendNotification", {
     Title = "Data Fetched.";
-    Text = "GUI Loaded sucessfully!";
+    Text = "GUI Loaded Sucessfully, Welcome Back!";
     Icon = "http://www.roblox.com/asset/?id=5585095509"; 
-    Duration = 5; 
-    callback = bindableFunction;
-})
-wait(1)
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Guess whos back yeeee";
-    Text = "Welcome back !";
-    Icon = "http://www.roblox.com/asset/?id=5585095509"; 
-    Duration = 2; 
+    Duration = 7; 
     callback = bindableFunction;
 })

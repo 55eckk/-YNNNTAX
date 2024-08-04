@@ -319,6 +319,9 @@ local plr = game.Players.LocalPlayer
 local rs = game:GetService("RunService")
 local mouse = plr:GetMouse()
 
+-- Variable para almacenar el jugador seleccionado
+local selectedPlayer = nil
+
 -- Function to add glow to SelectionBox
 local function AddGlow(selectionBox)
     local glow = Instance.new("PointLight")
@@ -387,16 +390,12 @@ local function CreateNeonPart(adornedPart, player)
     end)
 end
 
--- Function to get the local player's name
-local function GetLocalPlayerName()
-    return plr.Name
-end
-
 -- Function to handle player selection
 local function SelectPlayer(player)
     -- Avoid selecting the local player
     if player == plr then return end
 
+    -- Clean up previous selection
     for _, v in next, workspace:GetDescendants() do
         if v.Name == "SelectedPlayer" or v.Name == "SelectedPlayerGui" then
             v:Destroy()
@@ -404,23 +403,29 @@ local function SelectPlayer(player)
     end
 
     if player then
-        CreateNeonPart(player.Character.Head, player)
-        tar = player
+        if player.Character and player.Character:FindFirstChild("Head") then
+            CreateNeonPart(player.Character.Head, player)
+        end
 
-        -- Listen for player's respawn
-        player.CharacterAdded:Connect(function(character)
-            repeat
-                wait()
-            until character:FindFirstChild("Head")
-            CreateNeonPart(character.Head, player)
-        end)
+        selectedPlayer = player
+
+        -- Ensure only one CharacterAdded connection
+        if not player.CharacterAddedConnection then
+            player.CharacterAddedConnection = player.CharacterAdded:Connect(function(character)
+                repeat
+                    wait()
+                until character:FindFirstChild("Head")
+                if player == selectedPlayer then
+                    CreateNeonPart(character.Head, player)
+                end
+            end)
+        end
     end
 end
 
 -- Main key down event handler
 mouse.KeyDown:Connect(function(key)
     if key == 'r' then
-        tar = nil
         local n_plr, dist
         for _, v in pairs(game.Players:GetPlayers()) do
             if v ~= plr and plr.Character and plr.Character:FindFirstChild'HumanoidRootPart' then
@@ -434,9 +439,9 @@ mouse.KeyDown:Connect(function(key)
         if n_plr then
             SelectPlayer(n_plr)
         end
-    elseif key == 'q' and tar and plr.Character then
-        for _,v in next,plr.Character:GetDescendants() do
-            if v:IsA'Tool' and v.Name ~= 'Kawaii Revolver' and not v:FindFirstChild'ClientCD' and v:FindFirstChild'DamageRemote' and v:FindFirstChild'Cooldown' and tar and tar.Character and tar.Character:FindFirstChildOfClass'Humanoid' then
+    elseif key == 'q' and selectedPlayer and plr.Character then
+        for _, v in next, plr.Character:GetDescendants() do
+            if v:IsA'Tool' and v.Name ~= 'Kawaii Revolver' and not v:FindFirstChild'ClientCD' and v:FindFirstChild'DamageRemote' and v:FindFirstChild'Cooldown' and selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChildOfClass'Humanoid' then
                 AddCd(v,v.Cooldown.Value)
                 if v:FindFirstChild'Attack' and plr.Character:FindFirstChildOfClass'Humanoid' then
                     plr.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(v.Attack):Play()
@@ -453,15 +458,15 @@ mouse.KeyDown:Connect(function(key)
                         hitSound:Play()
                         rs.Stepped:Wait(0.2)
                     end
-                    v.DamageRemote:FireServer(tar.Character:FindFirstChildOfClass('Humanoid'))
+                    v.DamageRemote:FireServer(selectedPlayer.Character:FindFirstChildOfClass('Humanoid'))
                 end
-            elseif v:IsA'Tool' and v.Name == 'Kawaii Revolver' and not v:FindFirstChild'ClientCD' and v:FindFirstChild'ReplicateRemote' and v:FindFirstChild'Barrel' and v.Barrel:FindFirstChild'Attachment' and tar and tar.Character and tar.Character:FindFirstChild'Head' then
+            elseif v:IsA'Tool' and v.Name == 'Kawaii Revolver' and not v:FindFirstChild'ClientCD' and v:FindFirstChild'ReplicateRemote' and v:FindFirstChild'Barrel' and v.Barrel:FindFirstChild'Attachment' and selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild'Head' then
                 v.Parent = plr.Character
                 AddCd(v,1.0)
                 rs.Stepped:Wait()
                 plr.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(v.Fire):Play()
-                Shoot(v.Barrel.Attachment.WorldPosition, tar.Character:WaitForChild("Torso").Position, v)
-                v.ReplicateRemote:FireServer(tar.Character:WaitForChild("Torso").Position)
+                Shoot(v.Barrel.Attachment.WorldPosition, selectedPlayer.Character:WaitForChild("Torso").Position, v)
+                v.ReplicateRemote:FireServer(selectedPlayer.Character:WaitForChild("Torso").Position)            
             end
         end
     end

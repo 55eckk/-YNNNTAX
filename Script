@@ -1177,7 +1177,7 @@ for i, v in ipairs(players) do
 
         headSit = RunService.Heartbeat:Connect(function()
             if Players:FindFirstChild(v.Name) and v.Character and getRoot(v.Character) and getRoot(speaker.Character) and speaker.Character:FindFirstChildOfClass('Humanoid').Sit == true then
-                getRoot(speaker.Character).CFrame = getRoot(v.Character).CFrame * CFrame.Angles(0, math.rad(0), 0) * CFrame.new(0, 1.6, 0.4)
+                getRoot(speaker.Character).CFrame = getRoot(v.Character).CFrame * CFrame.Angles(0, math.rad(90), 0) * CFrame.new(0, 1.6, 0)
             else
                 if headSit then
                     headSit:Disconnect()
@@ -1206,7 +1206,7 @@ local function flingPlayer(player)
         if humanoid then
             local rootPart = character:FindFirstChild("HumanoidRootPart")
             if rootPart then
-                local flingForce = Vector3.new(0, 999999999999999999999999999, 0) -- Adjust the force as needed
+                local flingForce = Vector3.new(0, -10000, 0) -- Adjusted force for downward fling
 
                 humanoid:SetStateEnabled(Enum.HumanoidStateType.Physics, false)
                 humanoid.PlatformStand = true
@@ -1234,186 +1234,6 @@ local Hum = Char:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass
 for i,v in next, Hum:GetPlayingAnimationTracks() do
     v:Stop()
 end
-
-wait(7)
-
-local player = game.Players.LocalPlayer
-local humanoid = game.Workspace[player.Name].Humanoid
-humanoid.Health = 0
-end)
-
-window:Button("Check for a pencil",function()
-local toolName = "Pencil"
-local synx = "lapiz"
-
-local function checkTools()
-    for _, player in pairs(game.Players:GetPlayers()) do
-        local backpack = player.Backpack
-        if backpack then
-            local tool = backpack:FindFirstChild(toolName)
-            if tool then
-                game:GetService("StarterGui"):SetCore("ChatMakeSystemMessage", {
-                    Text = player.Name .. " tiene equipado un " .. synx
-                })
-            end
-        end
-    end
-end
-
--- Revisa los equipos cada cierto tiempo
-while true do
-    checkTools()
-    -- Espera un tiempo antes de volver a revisar (puedes ajustar este valor)
-    wait(6)
-end
-end)
-window:Button("Teleport to Pencil (NEW)",function()
-local Players = game:GetService("Players")
-local toolName = "Pencil"
-
-local function teleportToPencil()
-    for _, player in pairs(Players:GetPlayers()) do
-        local character = player.Character
-        if character then
-            local tool = character:FindFirstChild(toolName)
-            if tool then
-                local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-                if humanoidRootPart then
-                    game.StarterGui:SetCore("SendNotification", {
-    Title = "Pencil Founded, LETS END THIS >:).";
-    Text = "Teleporting..";
-    Icon = "http://www.roblox.com/asset/?id=5585095509";
-    Duration = 3;
-    callback = bindableFunction;
-})
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = humanoidRootPart.CFrame + Vector3.new(0, 0, 5)
-                    return
-                else
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = tool.Handle.CFrame + Vector3.new(0, 0, 5)
-                    return
-                end
-            end
-        end
-    end
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Pencil:";
-    Text = "No one has a pencil.";
-    Icon = "http://www.roblox.com/asset/?id=5585095509";
-    Duration = 3;
-    callback = bindableFunction;
-})
-end
-
-teleportToPencil()
-end)
-
-window:Button("Fling Pencil (NEW+OP)",function()
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local toolName = "Pencil"
-
-local function getTool(toolName)
-    for _, player in pairs(Players:GetPlayers()) do
-        local character = player.Character
-        if character then
-            local tool = character:FindFirstChild(toolName) or character:WaitForChild(toolName, 5)
-            if tool then
-                return tool
-            end
-        end
-    end
-    return nil
-end
-
-local function teleportToTool(tool)
-    if tool then
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Tool Found!";
-            Text = "Teleporting to Pencil.";
-            Icon = "http://www.roblox.com/asset/?id=5585095509";
-            Duration = 3;
-        })
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = tool.Handle.CFrame + Vector3.new(0, 0, 5)
-    else
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Pencil:";
-            Text = "No one has a pencil.";
-            Icon = "http://www.roblox.com/asset/?id=5585095509";
-            Duration = 3;
-        })
-    end
-end
-
-wait()
-local tool = getTool(toolName)
-teleportToTool(tool)
-
-if tool then
-    local headSit = nil
-    local speaker = Players.LocalPlayer
-    local function getRoot(character)
-        return character:FindFirstChild("HumanoidRootPart") or character.PrimaryPart or character:FindFirstChild("Torso")
-    end
-
-    if headSit then
-        headSit:Disconnect()
-    end
-
-    speaker.Character:FindFirstChildOfClass('Humanoid').Sit = true
-
-    headSit = RunService.Heartbeat:Connect(function()
-        if getRoot(speaker.Character) and speaker.Character:FindFirstChildOfClass('Humanoid').Sit == true then
-            getRoot(speaker.Character).CFrame = tool.Handle.CFrame * CFrame.Angles(0, math.rad(0), 0) * CFrame.new(0, 1.6, 0.4)
-        else
-            if headSit then
-                headSit:Disconnect()
-            end
-        end
-    end)
-
-    wait()
-
-    local Char = game.Players.LocalPlayer.Character
-    local Hum = Char:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass("AnimationController")
-
-    for _, v in next, Hum:GetPlayingAnimationTracks() do
-        v:Stop()
-    end
-
-    wait() -- Aquí comienza el fling
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Fling";
-            Text = "Applying fling..";
-            Icon = "http://www.roblox.com/asset/?id=5585095509";
-            Duration = 3;
-        })
-    local power = 50 -- change this to make it more or less powerful
-
-    RunService.Stepped:connect(function()
-        Char.Torso.CanCollide = false
-        Char["Left Leg"].CanCollide = false
-        Char["Right Leg"].CanCollide = false
-    end)
-
-    wait()
-    local bambam = Instance.new("BodyThrust")
-    bambam.Parent = Char.HumanoidRootPart
-    bambam.Force = Vector3.new(0, -power, 0) -- Fuerza hacia abajo
-    bambam.Location = Char.HumanoidRootPart.Position
-
-    Char.Humanoid.WalkSpeed = 15
-
-    -- STOPANIMS AQUI WOWW
-    for _, v in next, Hum:GetPlayingAnimationTracks() do
-        v:Stop()
-    end
-end
-game.StarterGui:SetCore("SendNotification", {
-            Title = "DONE!";
-            Text = "If not voided re try.";
-            Icon = "http://www.roblox.com/asset/?id=5585095509";
-            Duration = 3;
-        })
 end)
 
 window:Section(" Grenade Functions")
@@ -1667,7 +1487,7 @@ window:Button("Teleport Up (Exit)",function()
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-286, 97, -2)
 end)
 
-window:Button("Fling Grenade 2 Particles (G)",function()
+window:Button("Bring GR2 Particles (G+Mouse)",function()
 local UserInputService = game:GetService("UserInputService")
 local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
 local Folder = Instance.new("Folder", game:GetService("Workspace"))
@@ -1737,6 +1557,146 @@ spawn(function()
         Attachment1.WorldCFrame = Updated
     end
 end)
+end)
+
+window:Section(" View Pencil")
+
+window:Dropdown("View Pencil",{location = Table,flag = "view",search = false --[[AddsSearchBar]], list = {"Mace","Chainsaw","Knife","Pan","Pencil","Baseball Bat","Scythe", "Emerald Greatsword","Blood Dagger","Frost Spear"}--[[Wont work when PlayerList = true]], PlayerList = true --[[ Turns the list into the players in the server ]]},function()
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local function viewObject(object)
+    if object and object:IsA("BasePart") then
+        Camera.CameraType = Enum.CameraType.Scriptable
+        Camera.CFrame = CFrame.new(object.Position + Vector3.new(0, 5, 10), object.Position)
+    end
+end
+
+-- Reemplaza "Username" con el nombre del jugador y "Pencil" con el nombre del tool
+local targetUsername = (Table["view"])
+local toolName = "Pencil"
+
+local function findTool()
+    local character = workspace:FindFirstChild(targetUsername)
+    if character then
+        local tool = character:FindFirstChild(toolName)
+        if tool and tool:IsA("Tool") then
+            -- Buscar una parte dentro del tool
+            for _, part in pairs(tool:GetChildren()) do
+                if part:IsA("BasePart") then
+                    return part
+                end
+            end
+        end
+    end
+    return nil
+end
+
+-- Loop para buscar el tool constantemente
+while true do
+    local toolPart = findTool()
+    if toolPart then
+        viewObject(toolPart)
+    end
+    wait(1) -- Ajusta el intervalo de tiempo según sea necesario
+end
+end)
+
+window:Button("Unview Pencil",function()
+local speaker = game.Players.LocalPlayer
+
+workspace.CurrentCamera:remove()
+
+-- Espera un breve momento
+wait(0.1)
+
+-- Espera hasta que el personaje del jugador esté disponible
+repeat
+    wait()
+until speaker.Character ~= nil
+
+-- Establece la cámara para seguir al humanoide del personaje del jugador
+workspace.CurrentCamera.CameraSubject = speaker.Character:FindFirstChildWhichIsA('Humanoid')
+
+-- Configura la cámara en modo personalizado
+workspace.CurrentCamera.CameraType = "Custom"
+
+-- Ajusta las distancias mínimas y máximas del zoom de la cámara
+speaker.CameraMinZoomDistance = 0.5
+speaker.CameraMaxZoomDistance = 28
+
+-- Establece el modo de la cámara en "Clásico"
+speaker.CameraMode = "Classic"
+
+-- Desancla la cabeza del personaje del jugador
+speaker.Character.Head.Anchored = false
+end)
+
+window:Button("Teleport to Pencil (NEW)",function()
+local Players = game:GetService("Players")
+local toolName = "Pencil"
+
+local function teleportToPencil()
+    for _, player in pairs(Players:GetPlayers()) do
+        local character = player.Character
+        if character then
+            local tool = character:FindFirstChild(toolName)
+            if tool then
+                local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                if humanoidRootPart then
+                    game.StarterGui:SetCore("SendNotification", {
+    Title = "Pencil Founded, LETS END THIS >:).";
+    Text = "Teleporting..";
+    Icon = "http://www.roblox.com/asset/?id=5585095509";
+    Duration = 3;
+    callback = bindableFunction;
+})
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = humanoidRootPart.CFrame + Vector3.new(0, 0, 5)
+                    return
+                else
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = tool.Handle.CFrame + Vector3.new(0, 0, 5)
+                    return
+                end
+            end
+        end
+    end
+game.StarterGui:SetCore("SendNotification", {
+    Title = "Pencil:";
+    Text = "No one has a pencil.";
+    Icon = "http://www.roblox.com/asset/?id=5585095509";
+    Duration = 3;
+    callback = bindableFunction;
+})
+end
+
+teleportToPencil()
+end)
+
+window:Button("Check for a pencil",function()
+local toolName = "Pencil"
+local synx = "lapiz"
+
+local function checkTools()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        local backpack = player.Backpack
+        if backpack then
+            local tool = backpack:FindFirstChild(toolName)
+            if tool then
+                game:GetService("StarterGui"):SetCore("ChatMakeSystemMessage", {
+                    Text = player.Name .. " tiene equipado un " .. synx
+                })
+            end
+        end
+    end
+end
+
+-- Revisa los equipos cada cierto tiempo
+while true do
+    checkTools()
+    -- Espera un tiempo antes de volver a revisar (puedes ajustar este valor)
+    wait(6)
+end
 end)
 
 local Mouse = game.Players.LocalPlayer:GetMouse()

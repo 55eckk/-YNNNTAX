@@ -346,7 +346,7 @@ local function CreateNeonPart(adornedPart, player)
     billboardGui.Parent = adornedPart
 
     local frame = Instance.new("Frame")
-    frame.BackgroundTransparency = 0.35
+    frame.BackgroundTransparency = 0.15
     frame.Size = UDim2.new(0.9, 0, 0.9, 0)
     frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     frame.Parent = billboardGui
@@ -355,15 +355,15 @@ local function CreateNeonPart(adornedPart, player)
     neonPart.Name = "SelectedPlayer"
     neonPart.Anchored = true
     neonPart.CanCollide = false
-    neonPart.Transparency = 1
-    neonPart.Size = Vector3.new(0.2, 0.2, 0.2)
+    neonPart.Transparency = 0.85
+    neonPart.Size = Vector3.new(0.5, 0.5, 0.5)
     neonPart.Position = adornedPart.Position
     neonPart.CFrame = adornedPart.CFrame
     neonPart.Material = Enum.Material.Neon
     neonPart.Color = Color3.fromRGB(255, 0, 0)
     AddGlow(neonPart)  -- Añadir brillo a la parte de neón
     neonPart.Parent = adornedPart
-    
+
     -- Update neon part position continuously
     local function updatePosition()
         if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
@@ -372,9 +372,9 @@ local function CreateNeonPart(adornedPart, player)
             neonPart:Destroy()
         end
     end
-    
+
     updatePosition() -- Call initially to set correct position
-    
+
     -- Connect to heartbeat to update position continuously
     local heartbeatConnection
     heartbeatConnection = rs.Heartbeat:Connect(function()
@@ -406,6 +406,14 @@ local function SelectPlayer(player)
     if player then
         CreateNeonPart(player.Character.Head, player)
         tar = player
+
+        -- Listen for player's respawn
+        player.CharacterAdded:Connect(function(character)
+            repeat
+                wait()
+            until character:FindFirstChild("Head")
+            CreateNeonPart(character.Head, player)
+        end)
     end
 end
 
@@ -436,7 +444,7 @@ mouse.KeyDown:Connect(function(key)
                 if v:FindFirstChild('Blade') then
                     local swingSound = v.Blade:FindFirstChild('SwingSound')
                     local hitSound = v.Blade:FindFirstChild('HitSound')
-                    
+
                     if swingSound and swingSound:IsA('Sound') then
                         swingSound:Play()
                     end
@@ -453,7 +461,7 @@ mouse.KeyDown:Connect(function(key)
                 rs.Stepped:Wait()
                 plr.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(v.Fire):Play()
                 Shoot(v.Barrel.Attachment.WorldPosition, tar.Character:WaitForChild("Torso").Position, v)
-                v.ReplicateRemote:FireServer(tar.Character:WaitForChild("Torso").Position)            
+                v.ReplicateRemote:FireServer(tar.Character:WaitForChild("Torso").Position)
             end
         end
     end
